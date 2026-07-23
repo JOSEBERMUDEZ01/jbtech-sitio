@@ -1261,6 +1261,11 @@ footer{ padding:50px 0 40px; }
           <label for="f-msg">Mensaje</label>
           <textarea id="f-msg" name="message" placeholder="Cuéntame sobre tu proyecto..." required></textarea>
         </div>
+        <div class="field">
+          <label for="f-captcha">Verificación: ¿cuánto es <span id="capA">3</span> + <span id="capB">4</span>?</label>
+          <input id="f-captcha" type="text" inputmode="numeric" autocomplete="off" placeholder="Escribe el resultado" required>
+          <p id="captchaError" style="display:none; color:var(--amber); font-size:.78rem; font-family:var(--font-mono); margin:6px 0 0;">Esa respuesta no es correcta, intenta de nuevo.</p>
+        </div>
         <button type="submit" class="btn btn-primary" id="formSubmitBtn" style="justify-content:center;">Enviar mensaje</button>
         <p id="formError" style="display:none; color:var(--amber); font-size:.82rem; font-family:var(--font-mono); margin:0;">
           No se pudo enviar el mensaje. Escríbeme directo por WhatsApp con el botón flotante.
@@ -1269,7 +1274,8 @@ footer{ padding:50px 0 40px; }
 
       <div id="formSuccess" style="display:none; text-align:center; padding:20px 0;">
         <h3 style="font-size:1.2rem; margin-bottom:10px;">Mensaje enviado ✓</h3>
-        <p style="color:var(--muted); font-size:.92rem; margin:0;">Gracias por escribir. Te responderé lo antes posible al correo que dejaste.</p>
+        <p style="color:var(--muted); font-size:.92rem; margin:0 0 20px;">Gracias por escribir. Te responderé lo antes posible al correo que dejaste.</p>
+        <button type="button" id="formResetBtn" class="btn btn-ghost" style="justify-content:center; width:100%;">¿Otra consulta? Enviar otro mensaje</button>
       </div>
     </form>
   </div>
@@ -1367,31 +1373,24 @@ footer{ padding:50px 0 40px; }
   counters.forEach(function(el){ counterIO.observe(el); });
 
   /* ================================================================
-     NOTIFICACIÓN POR WHATSAPP (CallMeBot)
+     AVISO POR WHATSAPP (wa.me)
      ------------------------------------------------------------------
-     Para activarla, José debe:
-     1. Agregar el contacto +34 644 84 71 34 (CallMeBot) en su WhatsApp.
-     2. Enviarle el mensaje: "I allow callmebot to send me messages"
-     3. CallMeBot responde con un "apikey" personal.
-     4. Reemplazar CALLMEBOT_APIKEY (abajo) por ese apikey.
-     Mientras el apikey no se configure, el sitio sigue funcionando
-     normal: el mensaje se guarda igual en Netlify Forms, solo no
-     llega el aviso a WhatsApp.
+     No usa ningún bot ni automatización sobre tu cuenta: simplemente
+     abre WhatsApp con el mensaje ya redactado, dirigido a tu número.
+     Solo falta que la persona (o tú mismo, en la práctica) le dé
+     "Enviar" dentro de WhatsApp. Cero riesgo de que baneen la cuenta,
+     porque no hay ningún envío automático real.
      ================================================================ */
-  var CALLMEBOT_PHONE  = '573225634059';
-  var CALLMEBOT_APIKEY = 'TU_APIKEY_AQUI'; // <-- reemplazar con el apikey real
+  var WHATSAPP_NUMBER = '573225634059';
 
-  function notifyWhatsApp(name, email, phone, message){
-    if(!CALLMEBOT_APIKEY || CALLMEBOT_APIKEY === 'TU_APIKEY_AQUI') return;
-    var text = 'Nuevo contacto desde el portafolio:%0A' +
-               'Nombre: ' + name + '%0A' +
-               'Correo: ' + email + '%0A' +
-               'Teléfono: ' + phone + '%0A' +
+  function openWhatsAppNotice(name, email, phone, message){
+    var text = 'Nuevo contacto desde el portafolio:\n' +
+               'Nombre: ' + name + '\n' +
+               'Correo: ' + email + '\n' +
+               'Teléfono: ' + phone + '\n' +
                'Mensaje: ' + message;
-    var url = 'https://api.callmebot.com/whatsapp.php?phone=' + CALLMEBOT_PHONE +
-              '&text=' + encodeURIComponent(text).replace(/%250A/g, '%0A') +
-              '&apikey=' + CALLMEBOT_APIKEY;
-    fetch(url, { mode: 'no-cors' }).catch(function(){ /* aviso best-effort, no bloquea el flujo */ });
+    var url = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(text);
+    window.open(url, '_blank');
   }
 
   /* -------- Formulario de contacto (Netlify Forms como backend) -------- */
@@ -1403,13 +1402,31 @@ footer{ padding:50px 0 40px; }
 
   var contactForm = document.getElementById('contactForm');
   if(contactForm){
+    // Genera una suma aleatoria distinta cada vez que carga la página
+    var capNumA = Math.floor(Math.random() * 8) + 1;
+    var capNumB = Math.floor(Math.random() * 8) + 1;
+    var capElA = document.getElementById('capA');
+    var capElB = document.getElementById('capB');
+    if(capElA) capElA.textContent = capNumA;
+    if(capElB) capElB.textContent = capNumB;
+
     contactForm.addEventListener('submit', function(e){
       e.preventDefault();
       var btn = document.getElementById('formSubmitBtn');
       var errorBox = document.getElementById('formError');
+      var captchaError = document.getElementById('captchaError');
       var fields = document.getElementById('formFields');
       var success = document.getElementById('formSuccess');
       errorBox.style.display = 'none';
+      captchaError.style.display = 'none';
+
+      // Verificación anti-bot: si la suma no coincide, no se envía nada
+      var captchaValue = parseInt(document.getElementById('f-captcha').value, 10);
+      if(captchaValue !== (capNumA + capNumB)){
+        captchaError.style.display = 'block';
+        return;
+      }
+
       btn.disabled = true;
       btn.textContent = 'Enviando...';
 
@@ -1420,6 +1437,10 @@ footer{ padding:50px 0 40px; }
         phone: document.getElementById('f-phone').value,
         message: document.getElementById('f-msg').value
       };
+
+      // Se abre de inmediato (tiene que ser síncrono con el clic para que
+      // el navegador no lo bloquee como ventana emergente no solicitada)
+      openWhatsAppNotice(data.name, data.email, data.phone, data.message);
 
       fetch('/', {
         method: 'POST',
@@ -1435,7 +1456,6 @@ footer{ padding:50px 0 40px; }
           body: JSON.stringify({ name: data.name, email: data.email, phone: data.phone, message: data.message })
         }).catch(function(){});
 
-        notifyWhatsApp(data.name, data.email, data.phone, data.message);
         fields.style.display = 'none';
         success.style.display = 'block';
       }).catch(function(){
@@ -1444,6 +1464,23 @@ footer{ padding:50px 0 40px; }
         btn.textContent = 'Enviar mensaje';
       });
     });
+
+    var resetBtn = document.getElementById('formResetBtn');
+    if(resetBtn){
+      resetBtn.addEventListener('click', function(){
+        contactForm.reset();
+        document.getElementById('formSuccess').style.display = 'none';
+        document.getElementById('formFields').style.display = 'block';
+        var btn = document.getElementById('formSubmitBtn');
+        btn.disabled = false;
+        btn.textContent = 'Enviar mensaje';
+        // Nueva suma para la siguiente verificación
+        capNumA = Math.floor(Math.random() * 8) + 1;
+        capNumB = Math.floor(Math.random() * 8) + 1;
+        if(capElA) capElA.textContent = capNumA;
+        if(capElB) capElB.textContent = capNumB;
+      });
+    }
   }
 
   /* -------- Línea de tiempo animada del hero -------- */
