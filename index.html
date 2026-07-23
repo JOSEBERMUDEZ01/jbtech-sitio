@@ -1373,24 +1373,32 @@ footer{ padding:50px 0 40px; }
   counters.forEach(function(el){ counterIO.observe(el); });
 
   /* ================================================================
-     AVISO POR WHATSAPP (wa.me)
+     AVISO SILENCIOSO POR WHATSAPP (CallMeBot)
      ------------------------------------------------------------------
-     No usa ningún bot ni automatización sobre tu cuenta: simplemente
-     abre WhatsApp con el mensaje ya redactado, dirigido a tu número.
-     Solo falta que la persona (o tú mismo, en la práctica) le dé
-     "Enviar" dentro de WhatsApp. Cero riesgo de que baneen la cuenta,
-     porque no hay ningún envío automático real.
+     Corre en segundo plano: no abre ninguna ventana ni pestaña, el
+     cliente no ve nada distinto. Para activarlo, José debe:
+     1. Agregar el contacto +34 644 84 71 34 (CallMeBot) en su WhatsApp.
+     2. Enviarle el mensaje: "I allow callmebot to send me messages"
+     3. CallMeBot responde con un "apikey" personal.
+     4. Reemplazar CALLMEBOT_APIKEY (abajo) por ese apikey.
+     Mientras el apikey no se configure, el sitio sigue funcionando
+     normal: el mensaje se guarda igual en Netlify Forms y llega al
+     correo, solo no llega el aviso a WhatsApp.
      ================================================================ */
-  var WHATSAPP_NUMBER = '573225634059';
+  var CALLMEBOT_PHONE  = '573225634059';
+  var CALLMEBOT_APIKEY = '8671090';
 
-  function openWhatsAppNotice(name, email, phone, message){
-    var text = 'Nuevo contacto desde el portafolio:\n' +
-               'Nombre: ' + name + '\n' +
-               'Correo: ' + email + '\n' +
-               'Teléfono: ' + phone + '\n' +
+  function notifyWhatsApp(name, email, phone, message){
+    if(!CALLMEBOT_APIKEY || CALLMEBOT_APIKEY === 'TU_APIKEY_AQUI') return;
+    var text = 'Nuevo contacto desde el portafolio:%0A' +
+               'Nombre: ' + name + '%0A' +
+               'Correo: ' + email + '%0A' +
+               'Teléfono: ' + phone + '%0A' +
                'Mensaje: ' + message;
-    var url = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(text);
-    window.open(url, '_blank');
+    var url = 'https://api.callmebot.com/whatsapp.php?phone=' + CALLMEBOT_PHONE +
+              '&text=' + encodeURIComponent(text).replace(/%250A/g, '%0A') +
+              '&apikey=' + CALLMEBOT_APIKEY;
+    fetch(url, { mode: 'no-cors' }).catch(function(){ /* aviso best-effort, no bloquea el flujo */ });
   }
 
   /* -------- Formulario de contacto (Netlify Forms como backend) -------- */
@@ -1438,10 +1446,6 @@ footer{ padding:50px 0 40px; }
         message: document.getElementById('f-msg').value
       };
 
-      // Se abre de inmediato (tiene que ser síncrono con el clic para que
-      // el navegador no lo bloquee como ventana emergente no solicitada)
-      openWhatsAppNotice(data.name, data.email, data.phone, data.message);
-
       fetch('/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -1455,6 +1459,9 @@ footer{ padding:50px 0 40px; }
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name: data.name, email: data.email, phone: data.phone, message: data.message })
         }).catch(function(){});
+
+        // Aviso silencioso a WhatsApp, sin ninguna ventana visible
+        notifyWhatsApp(data.name, data.email, data.phone, data.message);
 
         fields.style.display = 'none';
         success.style.display = 'block';
