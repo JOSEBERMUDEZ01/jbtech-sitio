@@ -16,9 +16,10 @@ exports.handler = async function (event) {
     const data = JSON.parse(event.body);
     const name = (data.name || '').toString();
     const email = (data.email || '').toString();
+    const phone = (data.phone || '').toString();
     const message = (data.message || '').toString();
 
-    if (!name || !email || !message) {
+    if (!name || !email || !phone || !message) {
       return { statusCode: 400, body: JSON.stringify({ error: 'Faltan datos' }) };
     }
 
@@ -37,6 +38,7 @@ exports.handler = async function (event) {
           '<h2>Nuevo mensaje desde el portafolio de JB Tech</h2>' +
           '<p><b>Nombre:</b> ' + name + '</p>' +
           '<p><b>Correo:</b> ' + email + '</p>' +
+          '<p><b>Teléfono:</b> ' + phone + '</p>' +
           '<p><b>Mensaje:</b><br>' + message.replace(/\n/g, '<br>') + '</p>'
       })
     });
