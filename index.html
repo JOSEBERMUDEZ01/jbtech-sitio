@@ -1254,6 +1254,10 @@ footer{ padding:50px 0 40px; }
           <input id="f-mail" name="email" type="email" placeholder="tucorreo@dominio.com" required>
         </div>
         <div class="field">
+          <label for="f-phone">Teléfono / WhatsApp</label>
+          <input id="f-phone" name="phone" type="tel" placeholder="+57 300 000 0000" required>
+        </div>
+        <div class="field">
           <label for="f-msg">Mensaje</label>
           <textarea id="f-msg" name="message" placeholder="Cuéntame sobre tu proyecto..." required></textarea>
         </div>
@@ -1377,11 +1381,12 @@ footer{ padding:50px 0 40px; }
   var CALLMEBOT_PHONE  = '573225634059';
   var CALLMEBOT_APIKEY = 'TU_APIKEY_AQUI'; // <-- reemplazar con el apikey real
 
-  function notifyWhatsApp(name, email, message){
+  function notifyWhatsApp(name, email, phone, message){
     if(!CALLMEBOT_APIKEY || CALLMEBOT_APIKEY === 'TU_APIKEY_AQUI') return;
     var text = 'Nuevo contacto desde el portafolio:%0A' +
                'Nombre: ' + name + '%0A' +
                'Correo: ' + email + '%0A' +
+               'Teléfono: ' + phone + '%0A' +
                'Mensaje: ' + message;
     var url = 'https://api.callmebot.com/whatsapp.php?phone=' + CALLMEBOT_PHONE +
               '&text=' + encodeURIComponent(text).replace(/%250A/g, '%0A') +
@@ -1412,6 +1417,7 @@ footer{ padding:50px 0 40px; }
         'form-name': contactForm.getAttribute('name'),
         name: document.getElementById('f-name').value,
         email: document.getElementById('f-mail').value,
+        phone: document.getElementById('f-phone').value,
         message: document.getElementById('f-msg').value
       };
 
@@ -1426,10 +1432,10 @@ footer{ padding:50px 0 40px; }
         fetch('/.netlify/functions/send-email', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: data.name, email: data.email, message: data.message })
+          body: JSON.stringify({ name: data.name, email: data.email, phone: data.phone, message: data.message })
         }).catch(function(){});
 
-        notifyWhatsApp(data.name, data.email, data.message);
+        notifyWhatsApp(data.name, data.email, data.phone, data.message);
         fields.style.display = 'none';
         success.style.display = 'block';
       }).catch(function(){
