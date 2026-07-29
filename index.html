@@ -8,13 +8,13 @@
 <meta name="keywords" content="desarrollador full stack, Django, Python, JavaScript, PWA, Riohacha, La Guajira, JB Tech, software a la medida, ERS, arquitectura de software">
 <meta name="author" content="Jose Bermúdez — JB Tech">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="https://jbtech.dev/">
+<link rel="canonical" href="https://josebermudezdev.netlify.app/">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Jose Bermúdez — Desarrollo de Software Full Stack">
 <meta property="og:description" content="Construyo software a la medida con un proceso de ingeniería completo: análisis, ERS, diseño, desarrollo, pruebas, implementación y soporte.">
-<meta property="og:url" content="https://jbtech.dev/">
+<meta property="og:url" content="https://josebermudezdev.netlify.app/">
 <meta property="og:site_name" content="JB Tech">
 <meta property="og:locale" content="es_CO">
 
@@ -34,7 +34,7 @@
     "@type": "Organization",
     "name": "JB Tech"
   },
-  "url": "https://jbtech.dev/",
+  "url": "https://josebermudezdev.netlify.app/",
   "address": {
     "@type": "PostalAddress",
     "addressLocality": "Riohacha",
@@ -746,6 +746,7 @@ footer{ padding:50px 0 40px; }
   .hero-meta{ gap:24px; }
 }
 </style>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
 
@@ -1214,7 +1215,7 @@ footer{ padding:50px 0 40px; }
 
       <div class="contact-line">
         <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg></span>
-        WhatsApp: +57 322 563 4059
+        WhatsApp: +57 302 352 8086
       </div>
       <div class="contact-line">
         <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20Z"/></svg></span>
@@ -1262,13 +1263,16 @@ footer{ padding:50px 0 40px; }
           <textarea id="f-msg" name="message" placeholder="Cuéntame sobre tu proyecto..." required></textarea>
         </div>
         <div class="field">
-          <label for="f-captcha">Verificación: ¿cuánto es <span id="capA">3</span> + <span id="capB">4</span>?</label>
-          <input id="f-captcha" type="text" inputmode="numeric" autocomplete="off" placeholder="Escribe el resultado" required>
-          <p id="captchaError" style="display:none; color:var(--amber); font-size:.78rem; font-family:var(--font-mono); margin:6px 0 0;">Esa respuesta no es correcta, intenta de nuevo.</p>
+          <label>Verificación</label>
+          <div class="g-recaptcha" data-sitekey="TU_SITE_KEY_AQUI"></div>
+          <p id="captchaError" style="display:none; color:var(--amber); font-size:.78rem; font-family:var(--font-mono); margin:6px 0 0;">Marca la casilla de verificación antes de enviar.</p>
         </div>
         <button type="submit" class="btn btn-primary" id="formSubmitBtn" style="justify-content:center;">Enviar mensaje</button>
         <p id="formError" style="display:none; color:var(--amber); font-size:.82rem; font-family:var(--font-mono); margin:0;">
           No se pudo enviar el mensaje. Escríbeme directo por WhatsApp con el botón flotante.
+        </p>
+        <p id="formLimit" style="display:none; color:var(--amber); font-size:.82rem; font-family:var(--font-mono); margin:0;">
+          Ya alcanzaste el límite de 3 mensajes por hoy. Si es urgente, escríbeme directo por WhatsApp con el botón flotante.
         </p>
       </div>
 
@@ -1299,7 +1303,7 @@ footer{ padding:50px 0 40px; }
      WHATSAPP FLOTANTE
      ============================================================ -->
 <a class="wa-float" target="_blank" rel="noopener"
-   href="https://wa.me/573225634059?text=Hola%20Jose%2C%20vi%20tu%20portafolio%20y%20me%20interesa%20desarrollar%20un%20proyecto%20contigo."
+   href="https://wa.me/573023528086?text=Hola%20Jose%2C%20vi%20tu%20portafolio%20y%20me%20interesa%20desarrollar%20un%20proyecto%20contigo."
    aria-label="Escribir por WhatsApp">
   <svg viewBox="0 0 32 32"><path d="M16 3C9 3 3 9 3 16c0 2.5.7 4.9 2 7L3 29l6.2-2c2 1.1 4.3 1.7 6.8 1.7 7 0 13-6 13-13S23 3 16 3zm0 23.6c-2.2 0-4.3-.6-6.1-1.7l-.4-.2-4 1 1.1-3.9-.3-.4C5 19.4 4.4 17.7 4.4 16c0-6.4 5.2-11.6 11.6-11.6S27.6 9.6 27.6 16 22.4 26.6 16 26.6zm6.4-8.7c-.3-.2-2-1-2.3-1.1-.3-.1-.5-.2-.8.2-.2.3-.9 1.1-1.1 1.4-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.7-1.7-1-.9-1.7-2-1.9-2.3-.2-.3 0-.5.1-.7.2-.2.3-.4.5-.6.2-.2.2-.4.3-.6.1-.2 0-.5 0-.7-.1-.2-.8-1.9-1.1-2.6-.3-.7-.6-.6-.8-.6h-.7c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.3 1.4 3.5c.2.2 2.4 3.7 5.9 5.1.8.3 1.4.5 1.9.7.8.2 1.5.2 2.1.1.6-.1 2-.8 2.2-1.6.3-.8.3-1.5.2-1.6-.1-.2-.3-.3-.6-.4z"/></svg>
 </a>
@@ -1372,34 +1376,9 @@ footer{ padding:50px 0 40px; }
   }, { threshold: 0.6 });
   counters.forEach(function(el){ counterIO.observe(el); });
 
-  /* ================================================================
-     AVISO SILENCIOSO POR WHATSAPP (CallMeBot)
-     ------------------------------------------------------------------
-     Corre en segundo plano: no abre ninguna ventana ni pestaña, el
-     cliente no ve nada distinto. Para activarlo, José debe:
-     1. Agregar el contacto +34 644 84 71 34 (CallMeBot) en su WhatsApp.
-     2. Enviarle el mensaje: "I allow callmebot to send me messages"
-     3. CallMeBot responde con un "apikey" personal.
-     4. Reemplazar CALLMEBOT_APIKEY (abajo) por ese apikey.
-     Mientras el apikey no se configure, el sitio sigue funcionando
-     normal: el mensaje se guarda igual en Netlify Forms y llega al
-     correo, solo no llega el aviso a WhatsApp.
-     ================================================================ */
-  var CALLMEBOT_PHONE  = '573225634059';
-  var CALLMEBOT_APIKEY = '8671090';
-
-  function notifyWhatsApp(name, email, phone, message){
-    if(!CALLMEBOT_APIKEY || CALLMEBOT_APIKEY === 'TU_APIKEY_AQUI') return;
-    var text = 'Nuevo contacto desde el portafolio:%0A' +
-               'Nombre: ' + name + '%0A' +
-               'Correo: ' + email + '%0A' +
-               'Teléfono: ' + phone + '%0A' +
-               'Mensaje: ' + message;
-    var url = 'https://api.callmebot.com/whatsapp.php?phone=' + CALLMEBOT_PHONE +
-              '&text=' + encodeURIComponent(text).replace(/%250A/g, '%0A') +
-              '&apikey=' + CALLMEBOT_APIKEY;
-    fetch(url, { mode: 'no-cors' }).catch(function(){ /* aviso best-effort, no bloquea el flujo */ });
-  }
+  /* Nota: el aviso a WhatsApp y el límite de mensajes por IP ahora se
+     manejan del lado del servidor, dentro de la función
+     /.netlify/functions/send-email, no aquí en el navegador. */
 
   /* -------- Formulario de contacto (Netlify Forms como backend) -------- */
   function encodeFormData(data){
@@ -1410,27 +1389,23 @@ footer{ padding:50px 0 40px; }
 
   var contactForm = document.getElementById('contactForm');
   if(contactForm){
-    // Genera una suma aleatoria distinta cada vez que carga la página
-    var capNumA = Math.floor(Math.random() * 8) + 1;
-    var capNumB = Math.floor(Math.random() * 8) + 1;
-    var capElA = document.getElementById('capA');
-    var capElB = document.getElementById('capB');
-    if(capElA) capElA.textContent = capNumA;
-    if(capElB) capElB.textContent = capNumB;
-
     contactForm.addEventListener('submit', function(e){
       e.preventDefault();
       var btn = document.getElementById('formSubmitBtn');
       var errorBox = document.getElementById('formError');
+      var limitBox = document.getElementById('formLimit');
       var captchaError = document.getElementById('captchaError');
       var fields = document.getElementById('formFields');
       var success = document.getElementById('formSuccess');
       errorBox.style.display = 'none';
+      limitBox.style.display = 'none';
       captchaError.style.display = 'none';
 
-      // Verificación anti-bot: si la suma no coincide, no se envía nada
-      var captchaValue = parseInt(document.getElementById('f-captcha').value, 10);
-      if(captchaValue !== (capNumA + capNumB)){
+      // Verificación anti-bot real: exige que la casilla de reCAPTCHA
+      // esté resuelta. El token se valida de nuevo en el servidor,
+      // así que no se puede falsificar desde el navegador.
+      var captchaToken = (typeof grecaptcha !== 'undefined') ? grecaptcha.getResponse() : '';
+      if(!captchaToken){
         captchaError.style.display = 'block';
         return;
       }
@@ -1446,27 +1421,52 @@ footer{ padding:50px 0 40px; }
         message: document.getElementById('f-msg').value
       };
 
-      fetch('/', {
+      // Primero pasa por la función: valida el token de reCAPTCHA, revisa
+      // el límite de 3 mensajes por IP, envía el correo por Resend y el
+      // aviso silencioso a WhatsApp.
+      fetch('/.netlify/functions/send-email', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: encodeFormData(data)
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: data.name, email: data.email, phone: data.phone, message: data.message,
+          captchaToken: captchaToken
+        })
       }).then(function(response){
+        if(response.status === 429){
+          return response.json().catch(function(){ return {}; }).then(function(body){
+            var err = new Error('limit');
+            err.limit = true;
+            err.message = body.message;
+            throw err;
+          });
+        }
+        if(response.status === 403){
+          var err2 = new Error('captcha');
+          err2.captcha = true;
+          throw err2;
+        }
         if(!response.ok) throw new Error('network');
 
-        // Envío por correo vía Resend (best-effort: si falla, no bloquea el éxito)
-        fetch('/.netlify/functions/send-email', {
+        // Solo si pasó el filtro anterior, se guarda también en Netlify Forms
+        return fetch('/', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: data.name, email: data.email, phone: data.phone, message: data.message })
-        }).catch(function(){});
-
-        // Aviso silencioso a WhatsApp, sin ninguna ventana visible
-        notifyWhatsApp(data.name, data.email, data.phone, data.message);
-
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: encodeFormData(data)
+        });
+      }).then(function(){
         fields.style.display = 'none';
         success.style.display = 'block';
-      }).catch(function(){
-        errorBox.style.display = 'block';
+      }).catch(function(err){
+        if(err && err.limit){
+          if(err.message){ limitBox.textContent = err.message; }
+          limitBox.style.display = 'block';
+        } else if(err && err.captcha){
+          captchaError.textContent = 'La verificación no pasó, inténtalo de nuevo.';
+          captchaError.style.display = 'block';
+        } else {
+          errorBox.style.display = 'block';
+        }
+        if(typeof grecaptcha !== 'undefined') grecaptcha.reset();
         btn.disabled = false;
         btn.textContent = 'Enviar mensaje';
       });
@@ -1481,11 +1481,7 @@ footer{ padding:50px 0 40px; }
         var btn = document.getElementById('formSubmitBtn');
         btn.disabled = false;
         btn.textContent = 'Enviar mensaje';
-        // Nueva suma para la siguiente verificación
-        capNumA = Math.floor(Math.random() * 8) + 1;
-        capNumB = Math.floor(Math.random() * 8) + 1;
-        if(capElA) capElA.textContent = capNumA;
-        if(capElB) capElB.textContent = capNumB;
+        if(typeof grecaptcha !== 'undefined') grecaptcha.reset();
       });
     }
   }
