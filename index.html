@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Jose Bermúdez — Desarrollo de Software Full Stack | JB Tech</title>
 <meta name="description" content="Desarrollador Full Stack en formación activa, especializado en Python, Django, JavaScript y PWAs. Construyo y documento software a la medida: desde el análisis y la ERS hasta el soporte en producción.">
 <meta name="keywords" content="desarrollador full stack, Django, Python, JavaScript, PWA, Riohacha, La Guajira, JB Tech, software a la medida, ERS, arquitectura de software">
@@ -752,6 +752,18 @@ footer{ padding:50px 0 40px; }
   .services-grid{ grid-template-columns:1fr; }
   .hero-cta{ flex-direction:column; align-items:stretch; }
   .hero-meta{ gap:24px; }
+
+  /* Centrar el contenido de texto en móvil */
+  .hero-grid > div:first-child{ text-align:center; }
+  .eyebrow{ justify-content:center; }
+  .hero-tagline, .hero-services, .hero-sub{ margin-left:auto; margin-right:auto; }
+  .hero-meta{ justify-content:center; text-align:center; }
+  .section-head{ margin-left:auto; margin-right:auto; text-align:center; }
+  .about-copy{ text-align:center; }
+  .about-copy p{ margin-left:auto; margin-right:auto; }
+
+  /* El texto y las tarjetas ya no se deslizan al aparecer; solo las imágenes conservan su animación (zoom en hover/tap) */
+  .reveal{ transform:none; }
 }
 </style>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
