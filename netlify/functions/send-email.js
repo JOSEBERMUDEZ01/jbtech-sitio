@@ -97,6 +97,88 @@ exports.handler = async function (event) {
     // ---------------------------------------------------------
     // 3. Correo por Resend
     // ---------------------------------------------------------
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    const safeName = escapeHtml(name);
+    const safeEmail = escapeHtml(email);
+    const safePhone = escapeHtml(phone);
+    const safeMessage = escapeHtml(message).replace(/\n/g, '<br>');
+
+    const emailHtml = `
+<!DOCTYPE html>
+<html lang="es">
+<body style="margin:0; padding:0; background:#0d0a0b; font-family:'Segoe UI', Helvetica, Arial, sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0d0a0b; padding:32px 16px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px; background:#1a1416; border:1px solid #2c2225; border-radius:12px; overflow:hidden;">
+
+          <tr>
+            <td style="background:linear-gradient(135deg,#9B2242,#6e1830); padding:22px 28px;">
+              <span style="font-family:Georgia,serif; font-size:20px; font-weight:700; color:#F2ECEE; letter-spacing:.5px;">JB Tech</span><br>
+              <span style="font-family:'Courier New',monospace; font-size:11px; color:rgba(242,236,238,.75); letter-spacing:1px; text-transform:uppercase;">Nuevo contacto desde el portafolio</span>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:28px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="padding:0 0 16px;">
+                    <span style="display:block; font-family:'Courier New',monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase; color:#9B2242;">Nombre</span>
+                    <span style="display:block; font-size:15px; color:#F2ECEE; margin-top:3px;">${safeName}</span>
+                  </td>
+                </tr>
+                <tr><td style="border-top:1px solid #2c2225; padding:14px 0 0;"></td></tr>
+                <tr>
+                  <td style="padding:0 0 16px;">
+                    <span style="display:block; font-family:'Courier New',monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase; color:#9B2242;">Correo</span>
+                    <a href="mailto:${safeEmail}" style="display:block; font-size:15px; color:#F2ECEE; margin-top:3px; text-decoration:none;">${safeEmail}</a>
+                  </td>
+                </tr>
+                <tr><td style="border-top:1px solid #2c2225; padding:14px 0 0;"></td></tr>
+                <tr>
+                  <td style="padding:0 0 16px;">
+                    <span style="display:block; font-family:'Courier New',monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase; color:#9B2242;">Teléfono / WhatsApp</span>
+                    <span style="display:block; font-size:15px; color:#F2ECEE; margin-top:3px;">${safePhone}</span>
+                  </td>
+                </tr>
+                <tr><td style="border-top:1px solid #2c2225; padding:14px 0 0;"></td></tr>
+                <tr>
+                  <td style="padding:0;">
+                    <span style="display:block; font-family:'Courier New',monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase; color:#9B2242;">Mensaje</span>
+                    <span style="display:block; font-size:14.5px; line-height:1.6; color:#cfc5c8; margin-top:6px;">${safeMessage}</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:18px 28px; background:#150f11; border-top:1px solid #2c2225;">
+              <a href="https://wa.me/${safePhone.replace(/[^0-9]/g, '')}" style="display:inline-block; background:#9B2242; color:#fff; text-decoration:none; font-size:13px; font-weight:600; padding:9px 18px; border-radius:6px;">Responder por WhatsApp</a>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:16px 28px; text-align:center;">
+              <span style="font-family:'Courier New',monospace; font-size:10px; color:#5a5054;">Enviado automáticamente desde jbportafolio.netlify.app</span>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
     const emailResponse = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
@@ -108,12 +190,7 @@ exports.handler = async function (event) {
         to: ['josebp354@gmail.com'],
         reply_to: email,
         subject: 'Nuevo contacto desde el portafolio: ' + name,
-        html:
-          '<h2>Nuevo mensaje desde el portafolio de JB Tech</h2>' +
-          '<p><b>Nombre:</b> ' + name + '</p>' +
-          '<p><b>Correo:</b> ' + email + '</p>' +
-          '<p><b>Teléfono:</b> ' + phone + '</p>' +
-          '<p><b>Mensaje:</b><br>' + message.replace(/\n/g, '<br>') + '</p>'
+        html: emailHtml
       })
     });
 
