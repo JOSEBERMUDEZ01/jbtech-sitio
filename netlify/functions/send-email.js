@@ -24,7 +24,7 @@ const MAX_ATTEMPTS = 3;
 const WINDOW_MS = 24 * 60 * 60 * 1000; // 24 horas
 
 const CALLMEBOT_PHONE = '573023528086';
-const CALLMEBOT_APIKEY = 'PENDIENTE_NUEVO_APIKEY'; // <-- reemplazar con el apikey del número de negocio
+const CALLMEBOT_APIKEY = '1335636';
 
 exports.handler = async function (event) {
   if (event.httpMethod !== 'POST') {
