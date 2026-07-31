@@ -195,8 +195,9 @@ exports.handler = async function (event) {
     });
 
     // ---------------------------------------------------------
-    // 4. Aviso silencioso por WhatsApp (CallMeBot)
-    //    Best-effort: si falla, no bloquea el resto del flujo.
+    // 4. Aviso por WhatsApp (CallMeBot)
+    //    Se espera (await) a que termine; si no, la función serverless
+    //    puede apagarse antes de que la petición llegue a salir.
     // ---------------------------------------------------------
     if (CALLMEBOT_APIKEY && CALLMEBOT_APIKEY !== 'PENDIENTE_NUEVO_APIKEY') {
       const waText =
@@ -206,11 +207,17 @@ exports.handler = async function (event) {
         'Teléfono: ' + phone + '%0A' +
         'Mensaje: ' + message;
 
-      fetch(
-        'https://api.callmebot.com/whatsapp.php?phone=' + CALLMEBOT_PHONE +
-        '&text=' + encodeURIComponent(waText).replace(/%250A/g, '%0A') +
-        '&apikey=' + CALLMEBOT_APIKEY
-      ).catch(function () {});
+      try {
+        const waResponse = await fetch(
+          'https://api.callmebot.com/whatsapp.php?phone=' + CALLMEBOT_PHONE +
+          '&text=' + encodeURIComponent(waText).replace(/%250A/g, '%0A') +
+          '&apikey=' + CALLMEBOT_APIKEY
+        );
+        const waResult = await waResponse.text();
+        console.log('CallMeBot respuesta:', waResponse.status, waResult);
+      } catch (waErr) {
+        console.log('CallMeBot error:', waErr.message);
+      }
     }
 
     if (!emailResponse.ok) {
